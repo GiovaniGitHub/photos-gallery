@@ -1,0 +1,7 @@
+[MASTER]
+jobs=4 #number of processes to use
+[BASIC]
+good-names=photos-gallery #names to be considered ok
+[pre-commit-hook]
+command=custom_pylint
+disable=E0401, E501, C0301, W1203
