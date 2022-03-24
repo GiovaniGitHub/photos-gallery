@@ -1,14 +1,14 @@
 version: '3.8'
 
 services:
-  web:
+  api:
     build:
-      context: ./services/web
+      context: ./services/api
       dockerfile: Dockerfile.prod
     command: gunicorn --bind 0.0.0.0:5000 manage:app
     volumes:
-      - static_volume:/home/app/web/project/static
-      - media_volume:/home/app/web/project/media
+      - static_volume:/home/app/api/project/static
+      - media_volume:/home/app/api/project/media
     expose:
       - 5000
     env_file:
@@ -24,12 +24,12 @@ services:
   nginx:
     build: ./services/nginx
     volumes:
-      - static_volume:/home/app/web/project/static
-      - media_volume:/home/app/web/project/media
+      - static_volume:/home/app/api/project/static
+      - media_volume:/home/app/api/project/media
     ports:
       - 1337:80
     depends_on:
-      - web
+      - api
 
 volumes:
   postgres_data_prod:
