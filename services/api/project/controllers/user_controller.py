@@ -1,5 +1,6 @@
-from exceptions import UserAlreadyExists, UserNotFound
-from project.repositories.models import User
+from typing import List
+from exceptions import AlbumNotFound, UserAlreadyExists, UserNotFound
+from project.repositories.models import Album, User
 from project.utils.const import PWD_CONTEXT
 from sqlalchemy.exc import IntegrityError
 
@@ -24,3 +25,16 @@ def find_user(user_id: str) -> User:
     if not user:
         raise UserNotFound(message="User Not Found")
     return user
+
+def get_albums_by_owner(owner_id: str) -> List[Album]:
+    albums = Album.get_albums_by_owner(owner_id)
+    if not albums:
+        raise AlbumNotFound(message="No Album Found")
+    return albums
+
+
+def get_album_by_id_and_owner(album_id: str, owner_id: str) -> Album:
+    album = Album.get_album_by_id_and_owner(album_id, owner_id)
+    if not album:
+        raise AlbumNotFound(message="No Album Found")
+    return album

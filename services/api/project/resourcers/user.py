@@ -1,11 +1,11 @@
 from flask import request
-from exceptions import LoginUnauthorized, UserAlreadyExists
+from exceptions import AlbumNotFound, LoginUnauthorized, UserAlreadyExists
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required)
 from flask_restful import Resource
 from marshmallow import ValidationError
-from project.controllers.user_controller import create_user, login
-from project.repositories.serialializers import LoginRequestSchema, LoginResponseSchema, UserRequestSchema
+from project.controllers.user_controller import create_user, get_albums_by_owner, login
+from project.repositories.serialializers import AlbumsResponseSchema, LoginRequestSchema, LoginResponseSchema, UserRequestSchema
 
 
 class LoginResource(Resource):
@@ -43,11 +43,11 @@ class UserResource(Resource):
             return e.to_dict(), e.status_code
 
 
-# class UserAlbumsResource(Resource):
-#     @jwt_required()
-#     def get(self, owner_id):
-#         try:
-#             albums = get_albums_by_owner(owner_id)
-#             return AlbumsResponseSchema(many=True).dump(albums), 200
-#         except AlbumNotFound as e:
-#             return e.to_dict(), e.status_code
+class UserAlbumsResource(Resource):
+    @jwt_required()
+    def get(self, owner_id):
+        try:
+            albums = get_albums_by_owner(owner_id)
+            return AlbumsResponseSchema(many=True).dump(albums), 200
+        except AlbumNotFound as e:
+            return e.to_dict(), e.status_code
