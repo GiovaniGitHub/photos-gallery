@@ -7,7 +7,7 @@ basedir = path.abspath(path.dirname(__file__))
 class BaseConfig(object):
     STATIC_FOLDER = f"{environ.get('APP_FOLDER')}/project/static"
     MEDIA_FOLDER = f"{environ.get('APP_FOLDER')}/project/media"
-    
+    SECRET_KEY = environ.get("SECRET_KEY")
     TOKEN_EXPIRES = environ.get("TOKEN_EXPIRES", 120)
 
 class DataBaseConfig(object):

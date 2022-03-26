@@ -1,10 +1,9 @@
 import uuid
 from datetime import datetime
-from xmlrpc.client import Boolean
 
 from project.repositories.db import db
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.sql.sqltypes import DateTime, Integer, String
+from sqlalchemy.sql.sqltypes import DateTime, Integer, String, Boolean
 
 class CRUD():
 
@@ -30,16 +29,13 @@ class User(db.Model, CRUD):
     name = db.Column(String(256), nullable=False)
     email = db.Column(String(120), unique=True, nullable=False)
     password = db.Column(String(128), nullable=False)
-    comments = db.relationship('comments', backref='users', lazy=True)
-    photos = db.relationship("photos", backref='photos', lazy=True)
-    albums = db.relationship("albums", backref="albums", lazy=True)
     
     @staticmethod
     def find_by_email(email):
         try:
-            user = User.query.field(email=email).get()
+            user = User.query.filter(User.email==email).one()
             return user
-        except db.DoesNotExist:
+        except Exception as e:
             return None
 
     @staticmethod
@@ -47,7 +43,7 @@ class User(db.Model, CRUD):
         try:
             user = User.query.get(user_id)
             return user
-        except db.DoesNotExist:
+        except Exception as e:
             return None
 
     def __init__(self, email, name, password):
@@ -63,9 +59,11 @@ class Comment(db.Model, CRUD):
     message = db.Column(String(150), nullable=False)
     created_at = db.Column(DateTime, default=datetime.utcnow())
     updated_at = db.Column(DateTime, default=datetime.utcnow())
-    added_by = db.Column(Integer, db.ForeignKey('users.id'), nullable=False)
-    photo = db.Column(UUID(as_uuid=True), db.ForeignKey('photos.id'), nullable=False)
+    added_by_id = db.Column(Integer, db.ForeignKey('users.id'), nullable=False)
+    photo_id = db.Column(UUID(as_uuid=True), db.ForeignKey('photos.id'), nullable=False)
 
+    db.relationship("User", foreign_keys=[added_by_id])
+    db.relationship("Photo", foreign_keys=[photo_id])
 
 class Photo(db.Model, CRUD):
     __tablename__ = "photos"
@@ -78,9 +76,11 @@ class Photo(db.Model, CRUD):
     approved = db.Column(Boolean, default=False)
     created_at = db.Column(DateTime, default=datetime.utcnow())
     updated_at = db.Column(DateTime, default=datetime.utcnow())
-    added_by = db.Column(Integer, db.ForeignKey('users.id'), nullable=False)
-    comments = db.relationship('comments', backref='users', lazy=True)
-    album = db.Column(Integer, db.ForeignKey("albums.id"), nullable=False)
+    added_by_id = db.Column(Integer, db.ForeignKey('users.id'), nullable=False)
+    album_id = db.Column(Integer, db.ForeignKey("albums.id"), nullable=False)
+    
+    added_by = db.relationship("User", foreign_keys=[added_by_id])
+    album = db.relationship("Album", foreign_keys=[album_id])
 
 
 class Album(db.Model, CRUD):
@@ -88,17 +88,21 @@ class Album(db.Model, CRUD):
     
     id = db.Column(Integer, primary_key=True)
     title = db.Column(String(60), nullable=False)
-    created_at = db.DateTimeField(default=datetime.utcnow())
-    updated_at = db.DateTimeField(default=datetime.utcnow())
-    owner = db.Column(Integer, db.ForeignKey('users.id'), nullable=False)
-    spouse = db.Column(Integer, db.ForeignKey('users.id'), nullable=False)
-    friends = db.relationship("friends", secondary=album_friends)
-    photos = db.relationship('photos', backref='photos', lazy=True)
+    created_at = db.Column(DateTime, default=datetime.utcnow())
+    updated_at = db.Column(DateTime, default=datetime.utcnow())
+    owner_id = db.Column(Integer, db.ForeignKey('users.id'), nullable=False)
+    spouse_id = db.Column(Integer, db.ForeignKey('users.id'), nullable=False)
+    friends = db.relationship("User", secondary=album_friends)
+    photos = db.relationship('Photo', backref='photos', lazy=True)
     
+    owner = db.relationship("User", foreign_keys=[owner_id])
+    spouse = db.relationship("User", foreign_keys=[spouse_id])
+
     def get_album_by_id(self, id):
         try:
             return Album.query.get(id)
-        except db.DoesNotExist:
+        except Exception as e:
+            print(e)
             return None
 
     def get_albums_by_owner(self, owner_id):
@@ -122,7 +126,8 @@ class Album(db.Model, CRUD):
     def get_albums_by_owner(self, owner_id):
         try:
             return Album.query.filter(owner=owner_id).all()
-        except db.DoesNotExist:
+        except Exception as e:
+            print(e)
             return None
 
     def check_user_is_approver(self, user_id):
@@ -141,6 +146,7 @@ class Album(db.Model, CRUD):
     def get_approved_photo_by_id(self, photo_id) -> Photo:
         try:
             photo = self.photos.filter(approved=True, id=photo_id).get()
-        except db.DoesNotExist:
+        except Exception as e:
+            print(e)
             return None
         return photo

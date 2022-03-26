@@ -15,7 +15,7 @@ class LoginResource(Resource):
             data = LoginRequestSchema().load(request.get_json())
             user = login(**data)
             if user:
-                info = {"email": user.email, "id": str(user._id)}
+                info = {"email": user.email, "id": str(user.id)}
                 data_login = LoginResponseSchema().dump({
                     "name": user.name,
                     "access_token": create_access_token(info),
@@ -23,10 +23,8 @@ class LoginResource(Resource):
                 return data_login, 200
 
         except ValidationError as e:
-            print("Entrou no primeiro")
             return e.to_dict(), 400
         except LoginUnauthorized as e:
-            print("Entrou no segundo")
             return e.to_dict(), 400
 
 
