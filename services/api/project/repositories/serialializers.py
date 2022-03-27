@@ -45,8 +45,8 @@ class LoginRequestSchema(Schema):
 
 
 class AlbumsResponseSchema(Schema):
-    id = fields.Str(attribute="_id")
-    name = fields.Str(required=True)
+    id = fields.Str(attribute="id")
+    title = fields.Str(required=True)
     created_at = fields.DateTime()
 
 

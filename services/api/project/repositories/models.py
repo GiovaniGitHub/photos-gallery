@@ -93,23 +93,25 @@ class Album(db.Model, CRUD):
     created_at = db.Column(DateTime, default=datetime.utcnow())
     updated_at = db.Column(DateTime, default=datetime.utcnow())
     owner_id = db.Column(Integer, db.ForeignKey('users.id'), nullable=False)
-    spouse_id = db.Column(Integer, db.ForeignKey('users.id'), nullable=False)
+    spouse_id = db.Column(Integer, db.ForeignKey('users.id'), nullable=True)
     friends = db.relationship("User", secondary=album_friends)
     photos = db.relationship('Photo', backref='photos', lazy=True)
     
     owner = db.relationship("User", foreign_keys=[owner_id])
     spouse = db.relationship("User", foreign_keys=[spouse_id])
 
-    def get_album_by_id(self, id):
+    @staticmethod
+    def get_album_by_id(id):
         try:
             return Album.query.get(id)
         except Exception as e:
             print(e)
             return None
 
-    def get_albums_by_owner(self, owner_id):
+    @staticmethod
+    def get_albums_by_owner(owner_id):
         try:
-            return Album.query.filter(owner=owner_id).all()
+            return Album.query.filter(Album.owner_id==owner_id).all()
         except:
             return None
 

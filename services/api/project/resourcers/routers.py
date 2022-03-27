@@ -2,6 +2,7 @@ from flask import Blueprint
 from flask_restful import Api
 
 from project.resourcers import Alive
+from project.resourcers.album import AlbumResource
 from project.resourcers.user import LoginResource, UserResource
 
 
@@ -12,5 +13,7 @@ def init_routes(app):
     api.add_resource(Alive, "/hello")
     api.add_resource(UserResource, "/users")
     api.add_resource(LoginResource, "/login")
+    
+    api.add_resource(AlbumResource, "/albums")
     
     app.register_blueprint(bp)
