@@ -1,5 +1,6 @@
 from flask import Blueprint
 from flask_restful import Api
+
 from project.resourcers import Alive
 from project.resourcers.user import LoginResource, UserResource
 

@@ -1,11 +1,16 @@
-from flask import request
 from exceptions import AlbumNotFound, LoginUnauthorized, UserAlreadyExists
+from flask import request
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required)
 from flask_restful import Resource
 from marshmallow import ValidationError
-from project.controllers.user_controller import create_user, get_albums_by_owner, login
-from project.repositories.serialializers import AlbumsResponseSchema, LoginRequestSchema, LoginResponseSchema, UserRequestSchema
+
+from project.controllers.album_controller import get_albums_by_owner
+from project.controllers.user_controller import create_user, login
+from project.repositories.serialializers import (AlbumsResponseSchema,
+                                                 LoginRequestSchema,
+                                                 LoginResponseSchema,
+                                                 UserRequestSchema)
 
 
 class LoginResource(Resource):

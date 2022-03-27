@@ -1,20 +1,22 @@
 import uuid
 from datetime import datetime
 
-from project.repositories.db import db
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.sql.sqltypes import DateTime, Integer, String, Boolean
+from sqlalchemy.sql.sqltypes import Boolean, DateTime, Integer, String
+
+from project.repositories.db import db
+
 
 class CRUD():
-
     def save(self):
-        if self.id == None:
+        if not self.id:
             db.session.add(self)
         return db.session.commit()
 
     def destroy(self):
         db.session.delete(self)
         return db.session.commit()
+
 
 album_friends = db.Table('album_friends',
     db.Column('albums_id', db.Integer, db.ForeignKey('albums.id')),
@@ -35,7 +37,7 @@ class User(db.Model, CRUD):
         try:
             user = User.query.filter(User.email==email).one()
             return user
-        except Exception as e:
+        except Exception:
             return None
 
     @staticmethod
@@ -43,7 +45,7 @@ class User(db.Model, CRUD):
         try:
             user = User.query.get(user_id)
             return user
-        except Exception as e:
+        except Exception:
             return None
 
     def __init__(self, email, name, password):
@@ -108,7 +110,7 @@ class Album(db.Model, CRUD):
     def get_albums_by_owner(self, owner_id):
         try:
             return Album.query.filter(owner=owner_id).all()
-        except :
+        except:
             return None
 
     def check_user_has_permission(self, user_id):

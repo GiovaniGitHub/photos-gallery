@@ -10,6 +10,7 @@ class BaseConfig(object):
     SECRET_KEY = environ.get("SECRET_KEY")
     TOKEN_EXPIRES = environ.get("TOKEN_EXPIRES", 120)
 
+
 class DataBaseConfig(object):
     SQLALCHEMY_DATABASE_URI = environ.get("DATABASE_URL", "sqlite://")
     SQLALCHEMY_TRACK_MODIFICATIONS = False

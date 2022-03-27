@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from flask_jwt_extended import JWTManager
+
 from project.repositories.models import User
 
 
