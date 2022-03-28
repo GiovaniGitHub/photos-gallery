@@ -1,3 +1,4 @@
+from ast import Try
 import uuid
 from datetime import datetime
 
@@ -115,6 +116,14 @@ class Album(db.Model, CRUD):
         except:
             return None
 
+    @staticmethod
+    def get_album_by_id_and_owner(id, owner_id):
+        try:
+            return Album.query.filter(Album.id==id, Album.owner_id==owner_id).one()
+        except Exception as e:
+            print(e)
+            return None
+        
     def check_user_has_permission(self, user_id):
         if self.owner._id == user_id:
             return True
@@ -154,3 +163,13 @@ class Album(db.Model, CRUD):
             print(e)
             return None
         return photo
+    
+    def add_friend(self, email):
+        try:
+            user = User.find_by_email(email)
+            self.friends.append(user)
+            self.save()
+        except Exception as e:
+            print(e)
+            return False
+        return True
