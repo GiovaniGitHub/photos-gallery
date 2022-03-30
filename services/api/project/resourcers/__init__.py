@@ -5,5 +5,5 @@ class Alive(Resource):
 	def __init__(self):
 		pass
 	def get(self):
-		return {"status": "alive"}
+		return {"message": "alive", "status": "success"}
 
