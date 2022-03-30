@@ -1,17 +1,15 @@
-from ast import Try
 import uuid
+from ast import Try
 from datetime import datetime
 
+from project.repositories.db import db
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql.sqltypes import Boolean, DateTime, Integer, String
-
-from project.repositories.db import db
 
 
 class CRUD():
     def save(self):
-        if not self.id:
-            db.session.add(self)
+        db.session.add(self)
         return db.session.commit()
 
     def destroy(self):
@@ -20,8 +18,8 @@ class CRUD():
 
 
 album_friends = db.Table('album_friends',
-    db.Column('albums_id', db.Integer, db.ForeignKey('albums.id')),
-    db.Column('users_id', db.Integer, db.ForeignKey('users.id'))
+    db.Column('albums_id', db.Integer, db.ForeignKey('albums.id', ondelete="CASCADE")),
+    db.Column('users_id', db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"))
 )
 
 
@@ -96,7 +94,7 @@ class Album(db.Model, CRUD):
     owner_id = db.Column(Integer, db.ForeignKey('users.id'), nullable=False)
     spouse_id = db.Column(Integer, db.ForeignKey('users.id'), nullable=True)
     friends = db.relationship("User", secondary=album_friends)
-    photos = db.relationship('Photo', backref='photos', lazy=True)
+    photos = db.relationship('Photo', backref='photos', lazy=True, cascade="all, delete")
     
     owner = db.relationship("User", foreign_keys=[owner_id])
     spouse = db.relationship("User", foreign_keys=[spouse_id])
@@ -168,6 +166,15 @@ class Album(db.Model, CRUD):
         try:
             user = User.find_by_email(email)
             self.friends.append(user)
+            self.save()
+        except Exception as e:
+            print(e)
+            return False
+        return True
+
+    def add_photo(self, photo):
+        try:
+            self.photos.append(photo)
             self.save()
         except Exception as e:
             print(e)
