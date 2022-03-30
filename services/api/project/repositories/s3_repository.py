@@ -1,6 +1,7 @@
 import boto3
-from exceptions import FileUploadException
 from flask import current_app
+
+from exceptions import FileUploadException
 from project.utils.functions import get_extension
 
 

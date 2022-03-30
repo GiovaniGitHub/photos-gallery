@@ -1,4 +1,5 @@
 from flask.cli import FlaskGroup
+
 from project import app, db
 from project.controllers.user_controller import create_user
 from project.repositories.models import User

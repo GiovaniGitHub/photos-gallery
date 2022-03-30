@@ -2,9 +2,10 @@ import uuid
 from ast import Try
 from datetime import datetime
 
-from project.repositories.db import db
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql.sqltypes import Boolean, DateTime, Integer, String
+
+from project.repositories.db import db
 
 
 class CRUD():
@@ -119,7 +120,6 @@ class Album(db.Model, CRUD):
         try:
             return Album.query.filter(Album.id==id, Album.owner_id==owner_id).one()
         except Exception as e:
-            print(e)
             return None
         
     def check_user_has_permission(self, user_id):

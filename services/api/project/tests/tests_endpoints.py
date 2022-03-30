@@ -5,6 +5,7 @@ import requests
 from dotenv import dotenv_values
 from faker import Faker
 from flask import json
+
 from project.utils.const import PWD_CONTEXT
 
 config = dotenv_values(f'{os.getenv("PROJECT_GALLERY")}.env')

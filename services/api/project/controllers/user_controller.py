@@ -1,7 +1,8 @@
+from sqlalchemy.exc import IntegrityError
+
 from exceptions import AlbumNotFound, UserAlreadyExists, UserNotFound
 from project.repositories.models import Album, User
 from project.utils.const import PWD_CONTEXT
-from sqlalchemy.exc import IntegrityError
 
 
 def create_user(name: str, email: str, password: str) -> User:

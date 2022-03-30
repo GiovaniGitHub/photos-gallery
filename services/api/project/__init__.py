@@ -1,5 +1,6 @@
-from exceptions import handle_api_exceptions
 from flask import Flask
+
+from exceptions import handle_api_exceptions
 from project.repositories import db
 from project.resourcers.routers import init_routes
 from project.utils.authenticate import init_authentication
