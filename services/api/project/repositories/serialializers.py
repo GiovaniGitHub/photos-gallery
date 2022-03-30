@@ -1,5 +1,5 @@
-from marshmallow import Schema, ValidationError, fields, validate, validates
 
+from marshmallow import Schema, ValidationError, fields, validate, validates
 from project.utils.functions import check_file_as_format_valid, get_extension
 
 
@@ -7,6 +7,12 @@ class UserRequestSchema(Schema):
     email = fields.Email(required=True)
     name = fields.Str(required=True)
     password = fields.Str(required=True, validate=validate.Length(min=8))
+
+
+class UserResponseSchema(Schema):
+    email = fields.Email(required=True)
+    name = fields.Str(required=True)
+    password = fields.Str(required=True)
 
 
 class LoginResponseSchema(Schema):

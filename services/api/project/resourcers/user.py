@@ -4,13 +4,13 @@ from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required)
 from flask_restful import Resource
 from marshmallow import ValidationError
-
 from project.controllers.album_controller import get_albums_by_owner
 from project.controllers.user_controller import create_user, login
 from project.repositories.serialializers import (AlbumsResponseSchema,
                                                  LoginRequestSchema,
                                                  LoginResponseSchema,
-                                                 UserRequestSchema)
+                                                 UserRequestSchema,
+                                                 UserResponseSchema)
 
 
 class LoginResource(Resource):
@@ -28,17 +28,17 @@ class LoginResource(Resource):
                 return data_login, 200
 
         except ValidationError as e:
-            return e.to_dict(), 400
+            return e.messages, 400
         except LoginUnauthorized as e:
-            return e.to_dict(), 400
+            return e.message, 400
 
 
 class UserResource(Resource):
     def post(self):
         try:
             data = UserRequestSchema().load(request.get_json())
-            create_user(**data)
-            return None, 200
+            user = create_user(**data)
+            return UserResponseSchema().dump(user), 200
 
         except ValidationError as e:
             return e.messages, 400
