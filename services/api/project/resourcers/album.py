@@ -2,8 +2,8 @@ from flask import request
 from flask_jwt_extended import get_current_user, jwt_required
 from flask_restful import Resource
 from marshmallow import ValidationError
-
-from project.controllers.album_controller import (add_permission_to_user, create_album,
+from project.controllers.album_controller import (add_permission_to_user,
+                                                  create_album,
                                                   get_albums_by_owner)
 from project.repositories.serialializers import AlbumsResponseSchema
 
@@ -32,5 +32,4 @@ class FriendAlbumResource(Resource):
     @jwt_required()
     def put(self, album_id, user_email):
         current_user = get_current_user()
-        album_data = request.get_json()
         add_permission_to_user(album_id, user_email, current_user.id)
