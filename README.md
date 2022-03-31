@@ -1,4 +1,4 @@
-#Photo Gallery
+# Photo Gallery
 ## Overview
 It consists of a backend application that allows the client to register images in an album and gives permissions to the user.
 Only users registered for a certain album can register images and comment on the images in the album.
