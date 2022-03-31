@@ -3,7 +3,7 @@ It consists of a backend application that allows the client to register images i
 Only users registered for a certain album can register images and comment on the images in the album.
 The album owner has a buddy or companion who can also add users with permissions.
 
-Album images will be stored on S3.
+Album images will be stored on AWS S3.
 
 ## Installation Instructions
 
