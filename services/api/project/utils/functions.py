@@ -16,4 +16,4 @@ def check_email(email):
 
 def get_extension(filename):
     _, extension = os.path.splitext(filename)
-    return extension
+    return extension.replace(".","")

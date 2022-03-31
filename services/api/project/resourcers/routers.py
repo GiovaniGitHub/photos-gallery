@@ -3,7 +3,7 @@ from flask_restful import Api
 
 from project.resourcers import Alive
 from project.resourcers.album import AlbumResource, FriendAlbumResource
-from project.resourcers.photo import PhotoResource
+from project.resourcers.photo import PhotoLikeResource, PhotoResource
 from project.resourcers.user import LoginResource, UserResource
 
 
@@ -19,4 +19,6 @@ def init_routes(app):
     api.add_resource(FriendAlbumResource, "/album/<string:album_id>/friend/<string:user_email>")
     api.add_resource(PhotoResource, "/album/<string:album_id>/photos")
     
+    api.add_resource(PhotoLikeResource,
+                    "/album/<string:album_id>/photo/<string:photo_id>/like")
     app.register_blueprint(bp)

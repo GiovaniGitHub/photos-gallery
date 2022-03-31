@@ -2,6 +2,7 @@ from flask import Flask
 
 from exceptions import handle_api_exceptions
 from project.repositories import db
+from project.repositories.s3_repository import init_bucket
 from project.resourcers.routers import init_routes
 from project.utils.authenticate import init_authentication
 
@@ -11,3 +12,4 @@ init_authentication(app)
 db.init_db(app)
 init_routes(app)
 handle_api_exceptions(app)
+init_bucket(app)

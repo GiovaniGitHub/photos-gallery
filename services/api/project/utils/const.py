@@ -1,7 +1,7 @@
 
 from passlib.context import CryptContext
 
-PHOTOS_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+PHOTOS_EXTENSIONS = ("png", "jpg", "jpeg", "gif")
 
 PWD_CONTEXT = CryptContext(
     schemes=["pbkdf2_sha256"],
