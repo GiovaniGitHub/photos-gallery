@@ -1,5 +1,5 @@
 import uuid
-from ast import Try
+from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
 
 from sqlalchemy.dialects.postgresql import UUID
@@ -37,7 +37,7 @@ class User(db.Model, CRUD):
         try:
             user = User.query.filter(User.email==email).one()
             return user
-        except Exception:
+        except NoResultFound:
             return None
 
     @staticmethod
@@ -45,7 +45,7 @@ class User(db.Model, CRUD):
         try:
             user = User.query.get(user_id)
             return user
-        except Exception:
+        except NoResultFound:
             return None
 
     def __init__(self, email, name, password):
@@ -104,7 +104,7 @@ class Album(db.Model, CRUD):
     def get_album_by_id(id):
         try:
             return Album.query.get(id)
-        except Exception as e:
+        except NoResultFound as e:
             print(e)
             return None
 
@@ -112,21 +112,22 @@ class Album(db.Model, CRUD):
     def get_albums_by_owner(owner_id):
         try:
             return Album.query.filter(Album.owner_id==owner_id).all()
-        except:
+        except NoResultFound:
             return None
 
     @staticmethod
     def get_album_by_id_and_owner(id, owner_id):
         try:
             return Album.query.filter(Album.id==id, Album.owner_id==owner_id).one()
-        except Exception as e:
+        except NoResultFound:
             return None
         
     def check_user_has_permission(self, user_id):
-        if self.owner._id == user_id:
+
+        if self.owner_id == int(user_id):
             return True
 
-        if self.spouse._id == user_id:
+        if self.spouse_id == int(user_id):
             return True
 
         if any(Album.query.filter(Album.friends.any(id=user_id)).all()):
@@ -136,9 +137,8 @@ class Album(db.Model, CRUD):
 
     def get_albums_by_owner(self, owner_id):
         try:
-            return Album.query.filter(owner=owner_id).all()
-        except Exception as e:
-            print(e)
+            return Album.query.filter(Album.owner_id==owner_id).all()
+        except NoResultFound:
             return None
 
     def check_user_is_approver(self, user_id):
