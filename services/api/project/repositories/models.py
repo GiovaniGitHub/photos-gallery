@@ -1,8 +1,8 @@
 import uuid
-from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
 
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.sql.sqltypes import Boolean, DateTime, Integer, String
 
 from project.repositories.db import db

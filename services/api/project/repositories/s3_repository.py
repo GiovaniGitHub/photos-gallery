@@ -1,8 +1,8 @@
 import boto3
+from botocore.exceptions import ClientError
 from flask import current_app
 
 from exceptions import FileUploadException
-from botocore.exceptions import ClientError
 from project.utils.functions import get_extension
 
 
